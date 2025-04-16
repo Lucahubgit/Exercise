@@ -1,73 +1,98 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 
 
-# Connection to Google Sheets
-from streamlit_gsheets import GSheetsConnection
-gconn=st.connection("gsheets", type=GSheetsConnection)
-#Now the connection should be available and we are ready to read it
-#df=gconn.read()    #to read everything
-df=gconn.read(
-    worksheet=0,
-    usecols=[1, 2],
-    nrows=2
-)
-st.dataframe(df)
+page1=st.Page('page1.py', title='Page 1')
+page2=st.Page('page2.py', title='Page 2')
 
-# Save same data
-import os
-cwd=os.getcwd() #to store the current working directory in a string
-filename2save=os.path.join(cwd,"data2save.csv")
-
-df.to_csv(filename2save)   #from a dataframe to a csv file. Saved like this the first column is the index, we can avoid it using: df.to_csv(filename2save, index=False)
-st.success('File saved')
-
+pg=st.navigation([page1, page2])
+st.set_page_config(page_title="Volleyball project")
 
 
 '''
-# DA FINIRE E SISTEMARE
+# Inizializza lo stato della sessione
+if "df" not in st.session_state:
+    st.session_state.df = pd.DataFrame(columns=["step1", "step2", "step3"])
+if "current_row" not in st.session_state:
+    st.session_state.current_row = 0  # Indice della riga corrente
+if "current_step" not in st.session_state:
+    st.session_state.current_step = 1  # Step corrente (1, 2 o 3)
+if "match_date" not in st.session_state:
+    st.session_state.match_date = None  # Data del match
 
-team_name="Barcelona United"
-season=["2020-21", "2021-22", "2022-23", "2023-24"]
-wins=[20, 22, 18, 25]
-losses=[10, 8, 12, 5]
-goals_scored=[60, 65, 55, 70]
+# Inserimento della data del match
+st.subheader("Insert the match date")
+st.session_state.match_date = st.date_input("Match date", st.session_state.match_date)
+# Formatta la data come stringa (es. "2025-04-13")
+date_str = st.session_state.match_date.strftime("%Y-%m-%d")
 
-top_scorers={"Messi":15, "Pelè": 12, "Maradona": 10}
+# Step 1
+if st.session_state.current_step == 1:
+    st.subheader("What happened?")
 
-df={"wins":wins, "losses":losses, "season":season}
+    if st.button("Point scored"):
+        st.session_state.df.loc[st.session_state.current_row, "step1"] = "Point scored"
+        st.session_state.current_step = 2  # Passa allo step 2
 
-colA, colB=st.columns([1,1])   #the first column is three times the second one
-with colA:
-    st.header('Wins')   
-    st.line_chart(df, x="season", y="wins")
-with colB:
-    st.header('Losses')
-    st.line_chart(df, x="season", y="losses")
+    if st.button("Point lost"):
+        st.session_state.df.loc[st.session_state.current_row, "step1"] = "Point lost"
+        st.session_state.current_step = 2  # Passa allo step 2
 
-# Tabs
-st.title("Select the season")
-tab1, tab2, tab3, tab4=st.tabs(season)
+# Step 2
+if st.session_state.current_step == 2:
+    st.subheader("Due to?")
 
-colA, colB, colC=st.columns([1,1,1])   #the first column is three times the second one
-with colA:
-    st.header('Wins')   
-    for n in range(len(wins)):
-        st.write(wins[n])
-with colB:
-    st.header('Losses')
-    for n in range(len(wins)):
-        st.write(losses[n])
-with colC:
-    st.header('Goals scored')
-    for n in range(len(wins)):
-        st.write(goals_scored[n])
+    if st.button("Team point"):
+        st.session_state.df.loc[st.session_state.current_row, "step2"] = "Team point"
+        st.session_state.current_step = 3  # Passa allo step 3
 
-tab1.subheader("Wins")
-for n in range(len(wins)):
-    st.write(wins[n])
-tab2.subheader("Losses")
+    if st.button("Opponent error"):
+        st.session_state.df.loc[st.session_state.current_row, "step2"] = "Opponent error"
+        st.session_state.current_step = 3  # Passa allo step 3
 
-tab2.subheader("Goals scored")
+# Step 3
+if st.session_state.current_step == 3:
+    st.subheader("Select the player involved")
+
+    if st.button("Number 1"):
+        st.session_state.df.loc[st.session_state.current_row, "step3"] = "Number 1"
+
+    if st.button("Number 2"):
+        st.session_state.df.loc[st.session_state.current_row, "step3"] = "Number 2"
+
+    if st.button("Number 3"):
+        st.session_state.df.loc[st.session_state.current_row, "step3"] = "Number 3"
+
+    if st.button("Number 4"):
+        st.session_state.df.loc[st.session_state.current_row, "step3"] = "Number 4"
+
+    if st.button("Number 5"):
+        st.session_state.df.loc[st.session_state.current_row, "step3"] = "Number 5"
+
+    if st.button("Number 6"):
+        st.session_state.df.loc[st.session_state.current_row, "step3"] = "Number 6"
+
+# Bottone "Next action"
+st.subheader("Go to the next action")
+if st.button("Next action"):
+    st.session_state.current_row += 1  # Passa alla riga successiva
+    st.session_state.current_step = 1  # Torna allo step 1
+    st.success(f"Moved to the next row: {st.session_state.current_row + 1}")
+
+# Bottone "Save on Excel"
+st.subheader("Do you want to save the match?")
+if st.button("Save on Excel"):
+    st.session_state.df.to_excel(f"Match_{date_str}.xlsx", index=False)  # Salva il file Excel
+    st.success("File Excel updated and saved")
+    # Reset the DataFrame e current row
+    st.session_state.df = pd.DataFrame(columns=["step1", "step2", "step3"])
+    st.session_state.current_row = 0
+    st.session_state.current_step = 1  # Torna allo step 1
+
 '''
+
+
+
+
+
+pg.run()
