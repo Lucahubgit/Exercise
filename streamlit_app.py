@@ -8,16 +8,16 @@ l_point_type_page = st.Page('pages/l_point_type.py', title='l_point_type')
 w_player_page = st.Page('pages/w_player.py', title='w_player')
 l_player_page = st.Page('pages/l_player.py', title='l_player')
 w_court_page = st.Page('pages/w_court.py', title='w_court')
-#l_court1_page = st.Page('pages/l_court1.py', title='l_court1')
-#l_court2_page = st.Page('pages/l_court2.py', title='l_court2')
-#home_page = st.Page('pages/home.py', title='home')
+l_court_opp_point_page = st.Page('pages/l_court_opp_point.py', title='l_court_opp_point')
+l_court_team_error_page = st.Page('pages/l_court_team_error.py', title='l_court_team_error')
+start_page = st.Page('pages/start.py', title='start')
 
-pg = st.navigation([data_page, score_page, w_point_type_page, l_point_type_page, w_player_page, l_player_page, w_court_page], position='sidebar')
+pg = st.navigation([start_page, data_page, score_page, w_point_type_page, l_point_type_page, w_player_page, l_player_page, w_court_page, l_court_opp_point_page, l_court_team_error_page], position='sidebar')
 st.set_page_config(page_title='Volleyball report app DV4S', initial_sidebar_state='collapsed')
 
 # Inizializza tutti i "session state"
 if "df" not in st.session_state:
-    st.session_state.df = pd.DataFrame(columns=["score", "point_type", "player", "attack_zone", "defense_zone", "block_zone"]) # DataFrame vuoto
+    st.session_state.df = pd.DataFrame(columns=["score", "point_type", "player", "attack_zone", "defense_zone", "block_zone",  "serve_zone", "out_zone"]) # DataFrame vuoto
 
 if "current_row" not in st.session_state:
     st.session_state.current_row = 0  # Indice della riga corrente

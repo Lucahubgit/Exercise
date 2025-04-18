@@ -119,4 +119,5 @@ if st.session_state.step == 2:
 
     # Passa alla riga successiva
     st.session_state.current_row += 1
+    
     return_set_page()       
