@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-# SCELTA PUNTO GUADAGNATO O PERSO
+# SCELTA PUNTO GUADAGNATO O PERSO E SALVATAGGIO FILE EXCEL
 
 st.subheader("What happened?")
 
@@ -21,3 +21,19 @@ if st.button("Save on Excel"):
     # Reset the DataFrame and current row (resetta il foglio excel precedente nel caso la data scelta sia la stessa)
     #st.session_state.df = pd.DataFrame(columns=st.session_state.df.columns)
     #st.session_state.current_row = 0
+
+import io
+
+# Salva il DataFrame in un buffer in memoria
+buffer = io.BytesIO()
+with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
+    st.session_state.df.to_excel(writer, index=False, sheet_name=f"Match_{st.session_state.date_str}")
+buffer.seek(0)
+
+# Offri il file per il download
+st.download_button(
+    label="Scarica il file Excel",
+    data=buffer,
+    file_name=f"Match_{st.session_state.date_str}.xlsx",
+    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+)
