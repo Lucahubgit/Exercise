@@ -1,18 +1,23 @@
 import streamlit as st
 import pandas as pd
 
-page1 = st.Page('pages/page1.py', title='page1')
-page2 = st.Page('pages/page2.py', title='page2')
-page3 = st.Page('pages/w_point_type.py', title='w_point_type')
-page4 = st.Page('pages/player.py', title='player')
-court_page = st.Page('pages/court.py', title='Court')
+data_page = st.Page('pages/data.py', title='data')
+score_page = st.Page('pages/score.py', title='score')
+w_point_type_page = st.Page('pages/w_point_type.py', title='w_point_type')
+l_point_type_page = st.Page('pages/l_point_type.py', title='l_point_type')
+w_player_page = st.Page('pages/w_player.py', title='w_player')
+l_player_page = st.Page('pages/l_player.py', title='l_player')
+w_court_page = st.Page('pages/w_court.py', title='w_court')
+#l_court1_page = st.Page('pages/l_court1.py', title='l_court1')
+#l_court2_page = st.Page('pages/l_court2.py', title='l_court2')
+#home_page = st.Page('pages/home.py', title='home')
 
-pg = st.navigation([page1, page2, page3, page4, court_page], position='sidebar')
-st.set_page_config(page_title='DV4S')
+pg = st.navigation([data_page, score_page, w_point_type_page, l_point_type_page, w_player_page, l_player_page, w_court_page], position='sidebar')
+st.set_page_config(page_title='Volleyball report app DV4S', initial_sidebar_state='collapsed')
 
-# Inizializza lo stato della sessione per "match_date" se non esiste
+# Inizializza tutti i "session state"
 if "df" not in st.session_state:
-    st.session_state.df = pd.DataFrame(columns=["step1", "point_type", "player", "step4.1(att)", "step4.2(def)", "step4.3(block)"])
+    st.session_state.df = pd.DataFrame(columns=["score", "point_type", "player", "attack_zone", "defense_zone", "block_zone"]) # DataFrame vuoto
 
 if "current_row" not in st.session_state:
     st.session_state.current_row = 0  # Indice della riga corrente

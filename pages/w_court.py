@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 import pathlib
 
+# PAGINA CAMPO IN CASO DI PUNTO GUADAGNATO
+
 #recall the court.css file to create the court
 def load_css(file_path):
     with open(file_path) as f:
@@ -43,7 +45,7 @@ def return_set_page():
     st.session_state.current_row += 1  # Passa alla riga successiva
     st.success(f"Moved to the next row: {st.session_state.current_row + 1}")
     st.session_state.step = 0
-    st.switch_page("pages/page2.py")
+    st.switch_page("pages/score.py")
     
 
 
@@ -84,7 +86,7 @@ if st.session_state.step == 0:
 
     st.subheader("Go to the initial page")
     if st.button("Back"):
-        st.switch_page("pages/page2.py")
+        st.switch_page("pages/score.py")
     
 if st.session_state.step == 1:
 
@@ -105,10 +107,10 @@ if st.session_state.step == 1:
         back = st.button("Back", key="back", on_click=click_step, args=[0])
         
 if st.session_state.step == 2:
-    # Metodo per salvare i punti sulla stessa riga
-    st.session_state.df.loc[st.session_state.current_row, "step4.1(att)"] = st.session_state.point_att
-    st.session_state.df.loc[st.session_state.current_row, "step4.2(def)"] = st.session_state.point_def
-    st.session_state.df.loc[st.session_state.current_row, "step4.3(block)"] = st.session_state.point_block
+    # Metodo per salvare le zone del campo sulla stessa riga dell'excel
+    st.session_state.df.loc[st.session_state.current_row, "attack_zone"] = st.session_state.point_att
+    st.session_state.df.loc[st.session_state.current_row, "defense_zone"] = st.session_state.point_def
+    st.session_state.df.loc[st.session_state.current_row, "block_zone"] = st.session_state.point_block
     
     # Reset delle variabili
     st.session_state.point_att = 0
