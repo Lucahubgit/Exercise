@@ -102,15 +102,18 @@ if st.session_state.step == 1:
         save = st.button("Save", key="save", on_click=click_step, args = [2])
 
     
-    elif (st.session_state.point_att == 0 and st.session_state.point_def !=0) or (st.session_state.point_att != 0 and st.session_state.point_def ==0) or (st.session_state.point_att == 0 and st.session_state.point_def ==0 and st.session_state.point_block == 0):
+    elif (st.session_state.point_att == 0 and st.session_state.point_def != 0) or (st.session_state.point_att != 0 and st.session_state.point_def == 0) or (st.session_state.point_att == 0 and st.session_state.point_def == 0 and st.session_state.point_block == 0):
         st.warning("Please go back. You are missing the point selection!")
         back = st.button("Back", key="back", on_click=click_step, args=[0])
         
 if st.session_state.step == 2:
     # Metodo per salvare le zone del campo sulla stessa riga dell'excel
-    st.session_state.df.loc[st.session_state.current_row, "attack_zone"] = st.session_state.point_att
-    st.session_state.df.loc[st.session_state.current_row, "defense_zone"] = st.session_state.point_def
-    st.session_state.df.loc[st.session_state.current_row, "block_zone"] = st.session_state.point_block
+    if st.session_state.point_att != 0:
+        st.session_state.df.loc[st.session_state.current_row, "attack_zone"] = st.session_state.point_att
+    if st.session_state.point_def != 0:
+        st.session_state.df.loc[st.session_state.current_row, "defense_zone"] = st.session_state.point_def
+    if st.session_state.point_block != 0:
+        st.session_state.df.loc[st.session_state.current_row, "block_zone"] = st.session_state.point_block
     
     # Reset delle variabili
     st.session_state.point_att = 0

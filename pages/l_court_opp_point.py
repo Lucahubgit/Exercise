@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 import pathlib
 
+#ATTENZIONE: IL CODICE FUNZIONA, MA IL L'INIZIALIZZAZIONE DI SESSION_STATE è FATTA TRAMITE UNA STRINGA VUOTA, E NON TRAMITE L'INTERO 0, ALTRIMENTI SI HA UN ERRORE. STRANAMENTE QUESTO ERRORE NON SI PRESENTA NEL CODICE L_COURT_TEAM_ERROR
+
 # PAGINA CAMPO IN CASO DI PUNTO PERSO, OPPONENT POINT
 
 #recall the court.css file to create the court
@@ -17,27 +19,27 @@ if 'step' not in st.session_state:
     st.session_state.step = 0
 
 if 'point_att' not in st.session_state:
-    st.session_state.point_att = 0
+    st.session_state.point_att = ""
 
 if 'point_def' not in st.session_state:
-    st.session_state.point_def = 0
+    st.session_state.point_def = ""
 
 if 'point_block' not in st.session_state:
-    st.session_state.point_block = 0
+    st.session_state.point_block = ""
 
 def click_step(i):
     st.session_state.step = i
 
 def click_att(i):
-    st.session_state.point_att = i
+    st.session_state.point_att = i  # `i` è già una stringa (es. 'att-1')
 
 def click_def(i):
-    st.session_state.point_def = i
-    st.session_state.point_block = 0
+    st.session_state.point_def = i  # `i` è già una stringa (es. 'def-1')
+    st.session_state.point_block = ""  # Reset come stringa vuota
 
 def click_block(i):
-    st.session_state.point_block = i
-    st.session_state.point_def = 0
+    st.session_state.point_block = i  # `i` è già una stringa (es. 'block-1')
+    st.session_state.point_def = ""  # Reset come stringa vuota
 
 def return_set_page():
     st.session_state.current_row += 1  # Passa alla riga successiva
@@ -106,12 +108,21 @@ if st.session_state.step == 1:
         
         
 if st.session_state.step == 2:
-    # Metodo per salvare le zone del campo sulla stessa riga dell'excel VEDERE CHE SIANO CORRETTI ATTACK, DEFENSE E BLOCK RISPETTO ALLA ZONA DEL CAMPO
-    st.session_state.df.loc[st.session_state.current_row, "attack_zone"] = st.session_state.point_att
-    st.session_state.df.loc[st.session_state.current_row, "defense_zone"] = st.session_state.point_def
-    st.session_state.df.loc[st.session_state.current_row, "block_zone"] = st.session_state.point_block
+    # Salva i valori in base al tipo di azione
+    if 'att' in st.session_state.point_att:
+        st.session_state.df.loc[st.session_state.current_row, "attack_zone"] = st.session_state.point_att
+    elif 'serve' in st.session_state.point_att:
+        st.session_state.df.loc[st.session_state.current_row, "serve_zone"] = st.session_state.point_att
 
-    #reset all the variables:
+    if 'def' in st.session_state.point_def:
+        st.session_state.df.loc[st.session_state.current_row, "defense_zone"] = st.session_state.point_def
+    elif 'out' in st.session_state.point_def:
+        st.session_state.df.loc[st.session_state.current_row, "out_zone"] = st.session_state.point_def
+
+    if 'block' in st.session_state.point_block:
+        st.session_state.df.loc[st.session_state.current_row, "block_zone"] = st.session_state.point_block
+
+    # Reset delle variabili
     st.session_state.point_att = 0
     st.session_state.point_def = 0
     st.session_state.point_block = 0
@@ -120,5 +131,3 @@ if st.session_state.step == 2:
     st.session_state.current_row += 1
 
     return_set_page()
-
-

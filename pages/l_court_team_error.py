@@ -99,11 +99,18 @@ if st.session_state.step == 1:
         
         
 if st.session_state.step == 2:
-    # Metodo per salvare le zone del campo sulla stessa riga dell'excel
-    st.session_state.df.loc[st.session_state.current_row, "attack_zone"] = st.session_state.point_att
-    st.session_state.df.loc[st.session_state.current_row, "defense_zone"] = st.session_state.point_def
+    # Salva i valori in base al tipo di azione
+    if 'att' in st.session_state.point_att:
+        st.session_state.df.loc[st.session_state.current_row, "attack_zone"] = st.session_state.point_att
+    elif 'serve' in st.session_state.point_att:
+        st.session_state.df.loc[st.session_state.current_row, "serve_zone"] = st.session_state.point_att
 
-    #reset all the variables:
+    if 'block/net' in st.session_state.point_def:
+        st.session_state.df.loc[st.session_state.current_row, "block_zone"] = st.session_state.point_def
+    elif 'out' in st.session_state.point_def:
+        st.session_state.df.loc[st.session_state.current_row, "out_zone"] = st.session_state.point_def
+
+    # Reset delle variabili
     st.session_state.point_att = 0
     st.session_state.point_def = 0
 

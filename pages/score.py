@@ -48,7 +48,7 @@ with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
 
 # Button per il download del file excel
 st.download_button(
-    label="Scarica il file Excel",
+    label="Download the Excel file",
     data=buffer,
     file_name=f"Match_{st.session_state.date_str}.xlsx",
     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
