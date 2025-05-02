@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from openpyxl import Workbook
 
 #ATTENZIONE: CAMBIARE NUMERO DI GIOCATORI DEL ROSTER
 
@@ -45,7 +46,7 @@ if st.session_state.step == 0:
         report = st.button("Report", on_click=click_step, args=[1])
 
 if st.session_state.step == 1:
-    if len(st.session_state.game_roster) != 6 : #ATTENZIONE: CAMBIARE NUMERO DI GIOCATORI DEL ROSTER
+    if len(st.session_state.game_roster) != 3 : #ATTENZIONE: CAMBIARE NUMERO DI GIOCATORI DEL ROSTER
         st.warning("You are missing required information. Please finish to fill all the fields.")
         back = st.button("Back", on_click=click_step, args=[0])
     else:
@@ -67,6 +68,8 @@ if st.session_state.step == 3:
     if st.session_state.match_date:
         st.session_state.date_str = st.session_state.match_date.strftime("%d-%m-%Y")
     
+    # 2 POSSIBILI METODI PER SALVARE I DATI NEL FILE EXCEL (UNO DEI DUE È COMMENTATO)
+    # Metodo 1: colonna con tutti i player
     # Creazione foglio excel e salvataggio del roster
     # Creazione del DataFrame per il foglio "Roster"
     info_df = pd.DataFrame({
@@ -74,10 +77,22 @@ if st.session_state.step == 3:
         "Data": [st.session_state.match_date] * len(st.session_state.game_roster),
         "Opponent": [st.session_state.game_opp] * len(st.session_state.game_roster)
     })
-
     file_name = f"Match_{st.session_state.date_str}.xlsx"
-    
     with pd.ExcelWriter(file_name, engine='openpyxl', mode='w') as writer:
         info_df.to_excel(writer, index=False, sheet_name="Info")
+
+    # Metodo 2: una colonna per ogni player
+    # Creazione di un nuovo workbook e selezione del foglio attivo
+    #wb = Workbook()
+    #ws = wb.active
+    #ws.title = "Info"
+    # Aggiunta delle intestazioni
+    #ws.append(["Data", "Opponent"] + [f"Player {i+1}" for i in range(len(st.session_state.game_roster))])
+    # Aggiunta dei dati in una sola riga
+    #row = [st.session_state.match_date, st.session_state.game_opp] + st.session_state.game_roster
+    #ws.append(row)
+    # Salvataggio del file Excel
+    #file_name = f"Match_{st.session_state.date_str}.xlsx"
+    #wb.save(file_name)
     
     start_game()

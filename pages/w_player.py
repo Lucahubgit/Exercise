@@ -5,29 +5,14 @@ import pandas as pd
 
 st.subheader("Select the player involved")
 
-if st.button("Number 1"):
-    st.session_state.df.loc[st.session_state.current_row, "player"] = "Number 1"
-    st.switch_page("pages/w_court.py")
-
-if st.button("Number 2"):
-    st.session_state.df.loc[st.session_state.current_row, "player"] = "Number 2"
-    st.switch_page("pages/w_court.py")
-
-if st.button("Number 3"):
-    st.session_state.df.loc[st.session_state.current_row, "player"] = "Number 3"
-    st.switch_page("pages/w_court.py")
-
-if st.button("Number 4"):
-    st.session_state.df.loc[st.session_state.current_row, "player"] = "Number 4"
-    st.switch_page("pages/w_court.py")
-
-if st.button("Number 5"):
-    st.session_state.df.loc[st.session_state.current_row, "player"] = "Number 5"
-    st.switch_page("pages/w_court.py")
-
-if st.button("Number 6"):
-    st.session_state.df.loc[st.session_state.current_row, "player"] = "Number 6"
-    st.switch_page("pages/w_court.py")
+# Controlla se il game_roster è stato definito
+if "game_roster" in st.session_state and st.session_state.game_roster:
+    for player in st.session_state.game_roster:
+        if st.button(player):
+            st.session_state.df.loc[st.session_state.current_row, "player"] = player
+            st.switch_page("pages/w_court.py")
+else:
+    st.warning("No players selected in the roster. Please go back and select players.")
 
 # Tasto score page
 st.subheader("Go to the initial page")
