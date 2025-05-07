@@ -74,8 +74,18 @@ if st.button("Next Set"):
     st.info(f"Pronto per il Set {st.session_state.current_set}!")
 
 # Salva il foglio "Set 1" (ex "Game Report")
-st.subheader("The game is concluded? Save and download the report")
+st.subheader("The game is concluded? Save and download the report, after adding optional comments")
+
+text_input = st.text_input(
+    "Post-match hot takes",
+    key="placeholder",
+)
+
 if st.button("Save Game Report"):
+    # Inizializza current_set se non esiste
+    if "current_set" not in st.session_state:
+        st.session_state.current_set = 1  # Inizializza il primo set
+
     file_name = f"Match_{st.session_state.date_str}.xlsx"
     
     # Verifica se il file esiste
@@ -83,8 +93,12 @@ if st.button("Save Game Report"):
         with pd.ExcelWriter(file_name, engine='openpyxl', mode='a', if_sheet_exists='overlay') as writer:
             # Salva tutte le colonne del DataFrame nel foglio corrente
             st.session_state.df.to_excel(writer, index=False, sheet_name=f"Set {st.session_state.current_set}")
+            
+            # Aggiungi un nuovo foglio "comments" con il contenuto del text_input
+            comments_df = pd.DataFrame({"Comments": [st.session_state.placeholder]})
+            comments_df.to_excel(writer, index=False, sheet_name="Comments")
         
-        st.success(f"Set {st.session_state.current_set} salvato nel file Excel: {file_name}")
+        st.success(f"Set {st.session_state.current_set} e commenti salvati nel file Excel: {file_name}")
     except Exception as e:
         st.error(f"Errore durante il salvataggio del file Excel: {e}")
 
