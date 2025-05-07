@@ -46,7 +46,7 @@ if st.session_state.step == 0:
         report = st.button("Report", on_click=click_step, args=[1])
 
 if st.session_state.step == 1:
-    if len(st.session_state.game_roster) != 3 : #ATTENZIONE: CAMBIARE NUMERO DI GIOCATORI DEL ROSTER
+    if len(st.session_state.game_roster) != 14 : #ATTENZIONE: CAMBIARE NUMERO DI GIOCATORI DEL ROSTER
         st.warning("You are missing required information. Please finish to fill all the fields.")
         back = st.button("Back", on_click=click_step, args=[0])
     else:

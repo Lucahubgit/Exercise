@@ -16,11 +16,6 @@ pg = st.navigation([start_page, data_page, score_page, w_point_type_page, l_poin
 st.set_page_config(page_title='Volleyball report app DV4S', initial_sidebar_state='collapsed')
 
 # Inizializza tutti i "session state"
-#if "df" not in st.session_state:
-    #st.session_state.df = pd.DataFrame(columns=["score", "point_type", "player", "attack_zone", "defense_zone", "block_zone",  "serve_zone", "out_zone", "our_score", "opp_score", "set"]) # DataFrame vuoto
-    ##st.session_state.df["our_score"] = 0
-    ##st.session_state.df["opp_score"] = 0
-    ##st.session_state.df["set"] = 1
     
 if "df" not in st.session_state:
     st.session_state.df = pd.DataFrame({
@@ -34,7 +29,6 @@ if "df" not in st.session_state:
         "out_zone": [None],
         "our_score": [0],  # Inizializza con 0
         "opp_score": [0],  # Inizializza con 0
-        "set": [1]         # Inizializza con 1
     })
 
 if "current_row" not in st.session_state:
